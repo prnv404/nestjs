@@ -7,7 +7,8 @@ export class UserController {
     constructor(private userService: UserService) { }
     
     @Get()
-    getUser(@Query() user) {
+    getUser(@Query('user') user: string) {
+        
         return this.userService.getUser(user)
     }
 }

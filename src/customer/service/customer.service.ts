@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Customer } from '../interface/customer.interface';
@@ -21,5 +21,22 @@ export class CustomerService {
    async createCustomer(data: Customer): Promise<Customer> {
       const customer = await this.customerModel.create(data);
       return customer;
+   }
+
+   async updateCustomer(id: string, data: Customer): Promise<Customer> {
+      console.log(id);
+      try {
+         const updateCustomer = await this.customerModel.findByIdAndUpdate(
+            id,
+            { firstname: data.firstname },
+            {
+               new: true,
+            },
+         );
+
+         return updateCustomer;
+      } catch (error) {
+         throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
    }
 }

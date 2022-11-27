@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './interface/task.interface';
 import { TaskStoreService } from './task-store.service';
 
@@ -10,9 +10,11 @@ export class TaskService {
    }
 
    public async getTask(id: string): Promise<Task> {
-      return this.taskStoreService.getTask(id);
+      const data = this.taskStoreService.getTask(id);
+     
+      return data;
    }
-    
+
    public async getAllTask(): Promise<Task[]> {
       return this.taskStoreService.getAllTask();
    }

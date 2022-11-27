@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { Task } from './interface/task.interface';
 import { TaskService } from './task.service';
 
@@ -7,17 +7,21 @@ export class TaskController {
    constructor(private taskService: TaskService) {}
 
    @Get()
-   getAllTask(): Promise<Task[]> {
-      return this.taskService.getAllTask();
+   async getAllTask(): Promise<Task[]> {
+      const data = await this.taskService.getAllTask();
+      return data;
    }
 
    @Get(':id')
-   getTask(@Param('id') id: string): Promise<Task> {
-      return this.taskService.getTask(id);
+   async getTask(@Param('id') id: string): Promise<Task> {
+      const data = this.taskService.getTask(id);
+     
+      return data;
    }
-    
-    @Post('create')
-    addTask(@Body() task:Task) {
-        
-    }
+
+   @Post('create')
+   async addTask(@Body() task: Task) {
+      const data = await this.taskService.addTask(task);
+      return data;
+   }
 }

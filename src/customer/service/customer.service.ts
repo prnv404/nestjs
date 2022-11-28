@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+   HttpException,
+   HttpStatus,
+   Injectable,
+   NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Customer } from '../interface/customer.interface';
@@ -25,18 +30,24 @@ export class CustomerService {
 
    async updateCustomer(id: string, data: Customer): Promise<Customer> {
       console.log(id);
-      try {
-         const updateCustomer = await this.customerModel.findByIdAndUpdate(
-            id,
-            { firstname: data.firstname },
-            {
-               new: true,
-            },
-         );
 
-         return updateCustomer;
-      } catch (error) {
-         throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      const updateCustomer = await this.customerModel.findByIdAndUpdate(
+         id,
+         { firstname: data.firstname },
+         {
+            new: true,
+         },
+      );
+
+      if (!updateCustomer) {
+         throw new HttpException('No user found', HttpStatus.NOT_FOUND);
       }
+
+      return updateCustomer;
+   }
+
+   async deleteCustomer(id: string): Promise<Customer> {
+      const deletedCustomer = await this.customerModel.findOneAndDelete({ _id: id });
+      return deletedCustomer;
    }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { Customer } from '../interface/customer.interface';
 import { CustomerService } from '../service/customer.service';
 
@@ -27,5 +27,11 @@ export class CustomerController {
    async updateCustomer(@Param('id') id: string, @Body() data): Promise<Customer> {
       const updateCustomer = await this.customerService.updateCustomer(id, data);
       return updateCustomer;
+   }
+
+   @Delete(':id')
+   async delteCustomer(@Param('id') id: string): Promise<Customer> {
+      const deletedCustomer = await this.customerService.deleteCustomer(id);
+      return deletedCustomer
    }
 }
